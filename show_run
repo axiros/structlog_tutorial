@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+nr="$1"
+# git diff to last one:
+test "$nr"=="1" && cat tutorial || git diff
+
+echo "Resulting Terminal Output"
+./tutorial
