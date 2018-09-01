@@ -140,8 +140,7 @@ diff --git a/tutorial b/tutorial
 ```
 and here is a shot of the output:  
 ![colored terminal output with timestamp](https://axc2.axiros.com/maxmd/uploads/upload_f8ca5b6cc3d7a6a3b47b84300d1c37c3.png)
-
-The padding of the message string is a config option of the processor which creates the output string.
+The padding of the message string is a config option of the processor which creates the output string.*
 
 ## Processors
 
@@ -206,37 +205,18 @@ or
 
 ```diff
 $ ./show_run d
-diff --git a/tutorial b/tutorial
-index 77b9a32..0e511e0 100755
---- a/tutorial
-+++ b/tutorial
-@@ -7,22 +7,22 @@ def proc1(*a):
-     ev_dict['our_timestamp'] = time.ctime()
-     return ev_dict
 
--def proc2(Logger, meth_name, ev_dict, msg='processed result'):
+-def proc2(Logger, meth_name, ev_dict):
 +def proc2(Logger, meth_name, ev_dict, **cfg):
      # Last processor must match Logger method sig:
--    ev_dict['msg'] = msg
 +    # we are the 'renderer', no ev_dict after us anyway:
 +    ev_dict.update(cfg)
      return '%(our_timestamp)s %(event)s [%(msg)s]' % ev_dict
-
- class PrintLogger(object):
-     def __init__(self, **cfg):
-         self.cfg = cfg
-
--    def msg(self, msg, *a, **kw):
-+    def msg(self, msg):
-         pref = self.cfg.get('prefix', 'test: ')
--        print(' '.join((pref, msg, str(kw))))
-+        print(' '.join((pref, msg)))
-
- pl = PrintLogger(prefix='my prefix')
- proc2 = partial(proc2, msg='custom messge')
- log = structlog.wrap_logger(pl, processors=[proc1, proc2])
--import pdb; pdb.set_trace()
- log.msg('hi', key='value')
+        
+pl = PrintLogger(prefix='my prefix')
++ proc2 = partial(proc2, msg='custom messge')
+log = structlog.wrap_logger(pl, processors=[proc1, proc2])
+log.msg('hi', key='value')
 
 Resulting Terminal Output:
 my prefix Sat Sep  1 16:31:40 2018 hi [custom messge]
@@ -303,7 +283,6 @@ It explains in great detail the integration with stdlib logging for example, sho
 
 
 [structlogdoc]:http://www.structlog.org/en/stable/
-
 
 
 
