@@ -226,18 +226,19 @@ my prefix Sat Sep  1 16:31:40 2018 hi [custom messge]
 
 ## Performance
 
-It should be not ignored that structlog's supertransparent design ('just enough logging') compared to stdlib's 'batteries in - and NOT removable' design performs well better:
+It should be not overstated but also not ignored, that structlog's supertransparent design ('just enough logging') compared to stdlib's 'batteries in - and NOT removable' design performs well better:
 
-Example: 
+Example: Comparing raw performance [[test setup][ghperf]]
+
 ```
 stdlib log
 0.2720661163330078
 stdlib log
 1.9453916549682617
 ```
-comparing raw performance [[test setup][ghperf]].
 
-[ghperf]:https://github.com/axiros/structlog_tutorial/perf.py
+
+[ghperf]:https://github.com/axiros/structlog_tutorial/blob/master/perf.py
 
 
 ## (Deferring) Configuration: `get_logger`
