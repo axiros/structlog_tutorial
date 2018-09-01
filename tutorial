@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import structlog
 
 class PrintLogger(object):
     def __init__(self, **cfg):
@@ -8,6 +9,6 @@ class PrintLogger(object):
         pref = self.cfg.get('prefix', 'test: ')
         print(' '.join((pref, msg, str(kw))))
 
-log = PrintLogger(prefix='my prefix')
-log.msg('hi')
+log = structlog.wrap_logger(PrintLogger(prefix='my prefix'))
+log.msg('hi', key='value')
 
