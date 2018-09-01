@@ -22,7 +22,17 @@ class PrintLogger(object):
         print(' '.join((pref, msg)))
 
 pl = PrintLogger(prefix='my prefix')
-proc2 = partial(proc2, msg='custom messge')
-log = structlog.wrap_logger(pl, processors=[proc1, proc2])
-log.msg('hi', key='value')
+proc2 = partial(proc2, msg='custom message')
+
+# import time of 1000 application modules containing statements like:
+log2 = structlog.get_logger('some', 'factory', 'args')
+# until config any message goes to the default processors:
+log2.msg('hi from the default logger')
+
+# application ready to start, now configure logging:
+# giving all modules with .get_logger the same processors:
+structlog.configure( processors     = [proc1, proc2]
+                   , logger_factory = lambda *args: pl
+                   )
+log2.msg('hi, now conifgured to our logger')
 
