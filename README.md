@@ -1,6 +1,6 @@
 ---
 
-Note: README for 
+Note: README for https://github.com/axiros/structlog_tutorial
 
 ---
 
