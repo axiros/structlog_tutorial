@@ -39,7 +39,9 @@ test "$mode"!="d" && cat tutorial || git diff
 echo "Resulting Terminal Output:"
 ./tutorial
 ```
-Enough for this tutorial. If you want the full source for copy and paste instead of the diffs shown, than go back in the commit history, within this repo.
+Enough for this tutorial. If you want the full source for copy and paste instead of the diffs shown, than go back in the commit history, within [this][gh] repo.
+
+[gh]: https://github.com/axiros/structlog_tutorial/
 
 
 ## Make A Logger
@@ -98,7 +100,7 @@ Between the log invokation and the side effect we want to insert a chain of proc
 
 E.g.
 
-```flow
+```flow  (requires flowchart js to get rendered)
 st=>start: log.msg('hi')
 op1=>operation: create dict like context from event
 op2=>operation: add_timestamp
@@ -226,7 +228,11 @@ my prefix Sat Sep  1 16:31:40 2018 hi [custom messge]
 
 ## (Deferring) Configuration: `get_logger`
 
-Structlog assigns the default processors until **`.configure`**, to loggers which are made with `.get_logger` and not `wrap_logger`:
+When the application starts up, tons of modules acquiring a logger at import time. How do they know about their config, e.g. processors - we often did not even read any config file?
+
+Here is how:
+
+Structlog assigns the *default* processors initially to loggers which are made with `.get_logger` and not `wrap_logger` - until **`structlog.configure`** call:
 
 
 ```diff
@@ -278,11 +284,13 @@ You can
 ----
 
 And that is all there is to know for the base mechanics - you'll have now an easy time understanding the well crafted [documentation][structlogdoc] system of `structlog`, which you should now have a look at.  
-It explains in great detail the integration with stdlib logging for example, should you still want parts of that ;-)
+
+It explains in great detail the integration with stdlib logging for example , should you still want parts of that ;-)
 
 
 
 [structlogdoc]:http://www.structlog.org/en/stable/
+
 
 
 
