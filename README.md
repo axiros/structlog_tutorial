@@ -141,9 +141,11 @@ diff --git a/tutorial b/tutorial
 and here is a shot of the output:  
 ![colored terminal output with timestamp](https://axc2.axiros.com/maxmd/uploads/upload_f8ca5b6cc3d7a6a3b47b84300d1c37c3.png)
 
+The padding of the message string is a config option of the processor which creates the output string.
 
 ## Processors
 
+Lets see how they work in detail.  
 Completely removing the default processors and building our own chain:
 
 ```diff
