@@ -1,25 +1,28 @@
 #!/usr/bin/env python
-import structlog, time
+import structlog, time, functools
+partial = functools.partial
 
 def proc1(*a):
-    print('processor args of structlog:', ' '.join(str(s) for s in a))
     ev_dict = a[2]
     ev_dict['our_timestamp'] = time.ctime()
     return ev_dict
 
-def proc2(Logger, meth_name, ev_dict):
+def proc2(Logger, meth_name, ev_dict, **cfg):
     # Last processor must match Logger method sig:
-    return '%(our_timestamp)s %(event)s processed result' % ev_dict
+    # we are the 'renderer', no ev_dict after us anyway:
+    ev_dict.update(cfg)
+    return '%(our_timestamp)s %(event)s [%(msg)s]' % ev_dict
 
 class PrintLogger(object):
     def __init__(self, **cfg):
         self.cfg = cfg
 
-    def msg(self, msg, *a, **kw):
+    def msg(self, msg):
         pref = self.cfg.get('prefix', 'test: ')
-        print(' '.join((pref, msg, str(kw))))
+        print(' '.join((pref, msg)))
 
 pl = PrintLogger(prefix='my prefix')
+proc2 = partial(proc2, msg='custom messge')
 log = structlog.wrap_logger(pl, processors=[proc1, proc2])
 log.msg('hi', key='value')
 
