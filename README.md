@@ -8,7 +8,7 @@ Author: gk
 
 # Structlog Mechanics
 
-So, you spent your programmer live, logging with strings in mind?
+So, you spent your programmer live, logging with strings in mind?  
 Gave up your [values][values] in the process, by doing things like: `.info("User %s logged in", userid)`?
 
 Loved to conveniently add contextual data into those strings by simply modifying formatter fmt strings - and to get that convenience you were ok with the logging system adding *any possibly wanted* value before, i.e. into a stdlib log record?
