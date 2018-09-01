@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
-
 class PrintLogger(object):
+    def __init__(self, **cfg):
+        self.cfg = cfg
+
     def msg(self, msg, *a, **kw):
-        print('test:' + msg + str(kw))
+        pref = self.cfg.get('prefix', 'test: ')
+        print(' '.join((pref, msg, str(kw))))
 
-PrintLogger().msg('hi')
-
+log = PrintLogger(prefix='my prefix')
+log.msg('hi')
 
