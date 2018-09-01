@@ -1,6 +1,7 @@
 ---
 
 Note: README for https://github.com/axiros/structlog_tutorial
+Author: gk
 
 ---
 
@@ -116,8 +117,7 @@ We could do that by providing a function like `wrap_logger`, which accepts our P
 Structlog provides both:
 - The [BoundLogger][slbound] with its base class, invoking the configured processor chain [here][bbase_procs] - before calling the logger method with the result of the last processor.
 - And the [wrap_logger][wrap] function to get back such a bound logger (ignore the lazyproxy and the other variables except processors for now).
-
-> The bound logger in fact passes ANY 
+ 
 
 [slbound]: http://www.structlog.org/en/stable/_modules/structlog/_generic.html#BoundLogger
 [bbase_procs]: http://www.structlog.org/en/stable/_modules/structlog/_base.html#BoundLoggerBase._proxy_to_logger
@@ -138,7 +138,7 @@ diff --git a/tutorial b/tutorial
 +log = structlog.wrap_logger(PrintLogger(prefix='my prefix'))
 +log.msg('hi', key='value')
 ```
-and here is a shot of the output:
+and here is a shot of the output:  
 ![colored terminal output with timestamp](https://axc2.axiros.com/maxmd/uploads/upload_f8ca5b6cc3d7a6a3b47b84300d1c37c3.png)
 
 
