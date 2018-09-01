@@ -121,14 +121,15 @@ st->op1->op2->op3->e
 
 We could do that by providing a function like `wrap_logger`, which accepts our PrintLogger with config and processors chain - and returns a wrapped logger, where the wrapper has something like a `__getattr__` based adapter, passing the args through configured processors first, before invoking the output function (here `msg`).
 
-> This is the only "magic" mechanic in structlog and if you hate it you can avoid it by directly using the wrapper as your logger.
-
 
 Structlog provides both:
 - The [BoundLogger][slbound] with its base class, invoking the configured processor chain [here][bbase_procs] - before calling the logger method with the result of the last processor.
-- And the [wrap_logger][wrap] function to get back such a bound logger (ignore the lazyproxy and the other variables except processors for now).
- 
+- And the [wrap_logger][wrap] function to get back such a bound logger (ignore the lazyproxy and the other variables except processors for now in the [source][wrap]
 
+> Squeezing in the processor chain invokatation at gettatr time of log.msg is "magic" - in a bad sense. Though supported in structlog (as the one and only "magic" mechanic) they provide a [better way][custom_wrapper] - which you'll fully understand after this tutorial, not relevant at this point.
+
+
+[custom_wrapper]:http://www.structlog.org/en/stable/custom-wrappers.html
 [slbound]: http://www.structlog.org/en/stable/_modules/structlog/_generic.html#BoundLogger
 [bbase_procs]: http://www.structlog.org/en/stable/_modules/structlog/_base.html#BoundLoggerBase._proxy_to_logger
 [wrap]:http://www.structlog.org/en/stable/_modules/structlog/_config.html#wrap_logger
@@ -313,8 +314,6 @@ It explains in great detail the integration with stdlib logging for example , sh
 
 
 [structlogdoc]:http://www.structlog.org/en/stable/
-
-
 
 
 
