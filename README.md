@@ -17,7 +17,7 @@ And also you thought that dumping all you have into `json` is ok, in order to co
 
 Well, then [this][structlogdoc] is for you.
 
-We spare you of further stdlogging bashing / structlog motivation but try to give you headstart in *really* understanding *subsequent* readings about structlog.
+We spare you of further stdlogging bashing / structlog motivation but try to give you a headstart in *really* understanding *subsequent* readings about structlog.
 
 If you lack motivation, maybe check [here][falcon] first.
 
@@ -142,7 +142,7 @@ diff --git a/tutorial b/tutorial
 ```
 and here is a shot of the output:  
 ![colored terminal output with timestamp](https://axc2.axiros.com/maxmd/uploads/upload_f8ca5b6cc3d7a6a3b47b84300d1c37c3.png)
-The padding of the message string is a config option of the processor which creates the output string.*
+The padding of the message string is a config option of the processor which creates the output string.
 
 ## Processors
 
@@ -224,6 +224,20 @@ Resulting Terminal Output:
 my prefix Sat Sep  1 16:31:40 2018 hi [custom messge]
 ```
 
+## Performance
+
+It should be not ignored that structlog's supertransparent design ('just enough logging') compared to stdlib's 'batteries in - and NOT removable' design performs well better:
+
+Example: 
+```
+stdlib log
+0.2720661163330078
+stdlib log
+1.9453916549682617
+```
+comparing raw performance [[test setup][ghperf]].
+
+[ghperf]:https://github.com/axiros/structlog_tutorial/perf.py
 
 
 ## (Deferring) Configuration: `get_logger`
