@@ -15,7 +15,7 @@ Loved to conveniently add contextual data into those strings by simply modifying
 
 And also you thought that dumping all you have into `json` is ok, in order to cope with the requirements of the age of data processing pipelines?
 
-Well, then [this][structlog] is for you.
+Well, then [this][structlogdoc] is for you.
 
 We spare you of further stdlogging bashing / structlog motivation but try to give you headstart in *really* understanding *subsequent* readings about structlog.
 
@@ -300,7 +300,7 @@ It explains in great detail the integration with stdlib logging for example, sho
 
 
 
-[structlog]:(http://www.structlog.org/en/stable/) 
+[structlogdoc]:http://www.structlog.org/en/stable/
 
 
 
