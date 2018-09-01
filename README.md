@@ -71,6 +71,12 @@ $
 ```
 > Free your mind from the preconception that log entries *have* to be serialized to strings eventually. All structlog cares about is a dictionary of keys and values. What happens to it depends on the logger you wrap and your processors alone, see below. This gives you the power to log *directly* to databases, log aggregation servers, web services, and what not.
 
+> *If* the log result is text, than also note that there is not a SINGLE reason why you would merge a value at hand into a plain english format string!
+> Wrong: "Have 10 logged in users and 20 sessions"
+> Right: "**Session count**: total: **20**, logged_in: **10**   
+> and the latter, event type + kv based one, is allowing to later dig for times with max sessions and so on.
+
+
 [returnlogger]: http://www.structlog.org/en/stable/_modules/structlog/_loggers.html#ReturnLogger
 
 ## Make The Logger Configurable
