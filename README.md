@@ -295,7 +295,7 @@ You can
 
 ----
 
-And that is all there is to know for the base mechanics - you'll have now an easy time understanding the well crafted [documentation][structlog] system of `structlog`, which you should now have a look at.  
+And that is all there is to know for the base mechanics - you'll have now an easy time understanding the well crafted [documentation][structlogdoc] system of `structlog`, which you should now have a look at.  
 It explains in great detail the integration with stdlib logging for example, should you still want parts of that ;-)
 
 
