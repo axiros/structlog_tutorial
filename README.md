@@ -9,9 +9,10 @@ Author: gk
 # Structlog Mechanics
 
 So, you spent your programmer live, logging with strings in mind?  
+
 Gave up your [values][values] in the process, by doing things like: `.info("User %s logged in", userid)`?
 
-Loved to conveniently add contextual data into those strings by simply modifying formatter fmt strings - and to get that convenience you were ok with the logging system adding *any possibly wanted* value before, i.e. into a stdlib log record?
+Loved to conveniently add contextual data into those strings by simply modifying formatter fmt strings - and to get that convenience you were ok with the logging system having to add *any possibly wanted* value into "[LogRecords][logrec]" before?
 
 And also you thought that dumping all you have into `json` is ok, in order to cope with the requirements of the age of data processing pipelines?
 
@@ -21,6 +22,7 @@ We spare you of further stdlogging bashing / structlog motivation but try to giv
 
 If you lack motivation, maybe check [here][falcon] first.
 
+[logrec]:https://github.com/python/cpython/blob/2d7102e726e973ab2d307aa9748c7ec433677877/Lib/logging/__init__.py#L228
 [values]:https://www.youtube.com/watch?v=-6BsiVyC1kM
 [falcon]:http://stevetarver.github.io/2017/05/10/python-falcon-logging.html
 
