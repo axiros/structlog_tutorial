@@ -1,5 +1,15 @@
 #!/usr/bin/env python
-import structlog
+import structlog, time
+
+def proc1(*a):
+    print('processor args of structlog:', ' '.join(str(s) for s in a))
+    ev_dict = a[2]
+    ev_dict['our_timestamp'] = time.ctime()
+    return ev_dict
+
+def proc2(Logger, meth_name, ev_dict):
+    # Last processor must match Logger method sig:
+    return '%(our_timestamp)s %(event)s processed result' % ev_dict
 
 class PrintLogger(object):
     def __init__(self, **cfg):
@@ -9,6 +19,7 @@ class PrintLogger(object):
         pref = self.cfg.get('prefix', 'test: ')
         print(' '.join((pref, msg, str(kw))))
 
-log = structlog.wrap_logger(PrintLogger(prefix='my prefix'))
+pl = PrintLogger(prefix='my prefix')
+log = structlog.wrap_logger(pl, processors=[proc1, proc2])
 log.msg('hi', key='value')
 
