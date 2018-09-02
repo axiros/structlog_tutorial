@@ -10,18 +10,33 @@ Author: gk
 
 So, you spent your programmer live, logging with strings in mind?  
 
-Gave up your [values][values] in the process, by doing things like: `.info("User %s logged in", userid)`?
+Merged your precious [values][values] in the process into prosa, by doing things like: `.info("%s users logged in", len(users))`? 
 
-Loved to conveniently add contextual data into those strings by simply modifying formatter fmt strings - and to get that convenience you were ok with the logging system having to add *any possibly wanted* value into "[LogRecords][logrec]" before?
+And felt senior, when you spent another minute dropping the 's' in users if `len < 2` or, worse, changed the type of that value into a 'no' for `len == 0`.
 
-And also you thought that dumping all you have into `json` is ok, in order to cope with the requirements of the age of data processing pipelines?
+You loved the convenience of adding contextual data into those soups of values and english text, by simply modifying format strings - and to get that convenience you were ok with the logging system having to add *any possibly wanted* value into "[LogRecords][logrec]" before?
+
+And also you thought, spamming *all* that data into `json` is ok, in order to cope with the requirements of the age of data processing pipelines?
+
+Did you ever miss logging like
+
+```python
+info('UserCount', total=len(users))
+```
+With only that *additional* meta data in the final, which you declared to want - from global app config - down to function local context?  
+Where the previous format string is now an event type i.e. yet a new value, which can e.g. be rated per hour by a counting system(...)
 
 Well, then [this][structlogdoc] is for you.
 
+
 We spare you of further stdlogging bashing / structlog motivation but try to give you a headstart in *really* understanding *subsequent* readings about structlog.
 
-If you lack motivation, maybe check [here][falcon] first.
+If you lack motivation, maybe check [here][falcon] first. 
 
+[Here][talk] is a great talk about structlog from the [author][hynek], a Twisted and [CPython][cpython] committer. The talk is great also regarding other invaluable tools for building systems, like sentry.
+
+[hynek]: https://hynek.me/about/
+[cpython]:https://hynek.me/articles/my-road-to-the-python-commit-bit/
 [logrec]:https://github.com/python/cpython/blob/2d7102e726e973ab2d307aa9748c7ec433677877/Lib/logging/__init__.py#L228
 [values]:https://www.youtube.com/watch?v=-6BsiVyC1kM
 [falcon]:http://stevetarver.github.io/2017/05/10/python-falcon-logging.html
@@ -311,9 +326,12 @@ And that is all there is to know for the base mechanics - you'll have now an eas
 
 It explains in great detail the integration with stdlib logging for example , should you still want parts of that ;-)
 
+---
 
-
+[talk]:https://www.youtube.com/watch?time_continue=2150&v=LklGF1rcJII
 [structlogdoc]:http://www.structlog.org/en/stable/
+
+
 
 
 
