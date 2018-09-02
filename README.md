@@ -10,36 +10,37 @@ Author: gk
 
 So, you spent your programmer live, logging with strings in mind?  
 
-Merged your precious [values][values] in the process into prosa, by doing things like: `.info("%s users logged in", len(users))`? 
+- Merged your precious [values][values] in the process into prosa, by doing things like: `.info("%s users logged in", total)`? 
 
-And felt senior, when you spent another minute dropping the 's' in users if `len < 2` or, worse, changed the type of that value into a 'no' for `len == 0`.
+- Thought a lot about how to *build* them but not about how to *parse* that prosa and felt senior, whenever you did drop the 's' in users if `total < 2` and (worse) changed the type of that value into a "No" for `total == 0`?
 
-You loved the convenience of adding contextual data into those soups of values and english text, by simply modifying format strings - and to get that convenience you were ok with the logging system having to add *any possibly wanted* value into "[LogRecords][logrec]" before?
+- Committed such "improvements" even for the next minor - and after the update customer ops wondered every morning why their home grown counter creation scripts failed yet again to deliver values during runs in non business hours?
 
-And also you thought, spamming *all* that data into `json` is ok, in order to cope with the requirements of the age of data processing pipelines?
+- You found that adding context data into those soups of values and english text by simply modifying format strings elegant - and to get that you were ok with the logging system having to provide *any possibly wanted* value within "[LogRecords][logrec]" and their "extra" dicts before?
 
-Did you ever miss logging like
+- And also you thought, spamming *all* that data into `json` is ok, in order to cope with the requirements of the age of data processing pipelines?
+
+- Improving measures where reduced to adding yet more to the already existing plethora of formatters and handlers?
+
+Did you never miss logging like
 
 ```python
-info('UserCount', total=len(users))
+log.info('UserCount', total=len(users)) 
 ```
-With only that *additional* meta data in the final, which you declared to want - from global app config - down to function local context?  
-Where the previous format string is now an event type i.e. yet a new value, which can e.g. be rated per hour by a counting system(...)
+- Where the string is now an event type i.e. yet a new precious value, which can e.g. be rated per hour by a counting system(...)
 
-Well, then [this][structlogdoc] is for you.
+- And where only such *additional* meta data is added by the logging subsystem, which you declared to want - from global app config - down to function or threadlocal context?  
 
 
-We spare you of further stdlogging bashing / structlog motivation but try to give you a headstart in *really* understanding *subsequent* readings about structlog.
+**Well, then [this][structlogdoc] is for you.**
 
-If you lack motivation, maybe check [here][falcon] first. 
 
-[Here][talk] is a great talk about structlog from the [author][hynek], a Twisted and [CPython][cpython] committer. The talk is great also regarding other invaluable tools for building systems, like sentry.
+We spare you of [further][bashingchris] stdlogging [bashing][bashing1] / structlog motivation but try to give you a headstart in *really* understanding *subsequent* readings about **structlog**. 
 
-[hynek]: https://hynek.me/about/
-[cpython]:https://hynek.me/articles/my-road-to-the-python-commit-bit/
-[logrec]:https://github.com/python/cpython/blob/2d7102e726e973ab2d307aa9748c7ec433677877/Lib/logging/__init__.py#L228
-[values]:https://www.youtube.com/watch?v=-6BsiVyC1kM
-[falcon]:http://stevetarver.github.io/2017/05/10/python-falcon-logging.html
+If you still lack motivation, maybe check [here][falcon] first. 
+
+And [here][talk] is a talk about structlog from the [author][hynek], a Twisted and [CPython][cpython] committer, who works for a hosting provider (the talk is a great, also regarding other invaluable tools for building systems, like sentry).
+
 
 ## Preparation: Tutorial Setup
 
@@ -217,6 +218,8 @@ Answer: [DRY][dry]: In the example flow above, there is this last processor maki
 [logkw]: http://www.structlog.org/en/stable/_modules/structlog/stdlib.html#render_to_log_kwargs
 [logging]: https://docs.python.org/3/library/logging.html#module-logging
 
+
+
 ### Configurable Processors
 
 > This is for Python beginners, the technique shown here is not for structlog only.
@@ -273,32 +276,6 @@ Here is how:
 
 Structlog assigns the *default* processors initially to loggers which are made with `.get_logger` and not `wrap_logger` - until **`structlog.configure`** call:
 
-
-```diff
-$ ./show_run d
-
- pl = PrintLogger(prefix='my prefix')
-messge')
--log = structlog.wrap_logger(pl, processors=[proc1, proc2])
--log.msg('hi', key='value')
-
-+# import time of 1000 application modules containing statements like:
-+log2 = structlog.get_logger('some', 'factory', 'args')
-+# until config any message goes to the default processors:
-+log2.msg('hi from the default logger')
-+
-+# application ready to start, now configure logging:
-+# giving all modules with .get_logger the same processors:
-+structlog.configure( processors     = [proc1, proc2]
-+                   , logger_factory = lambda *args: pl
-+                   )
-+log2.msg('hi, now conifgured to our logger')
-
-Resulting Terminal Output:
-2018-09-01 16:45.01 hi from the default logger
-my prefix Sat Sep  1 16:45:01 2018 hi, now conifgured to our logger [custom message]
-```
-
 `.configure` has basically the effect to change the defaults of
 
 - `processors` (default: see example flow)
@@ -306,12 +283,6 @@ my prefix Sat Sep  1 16:45:01 2018 hi, now conifgured to our logger [custom mess
 - `initial_values` (default: {})
 - `context_class`  (default: `dict`)
 
-> `context_class`: Key for the feature of keeping immutable i.e. cacheable loggers - but with [thread local context values][tll]. For < 3.6 it is OrderedDict, to keep multi step context additions in order.
-
-
-[tll]: http://www.structlog.org/en/stable/examples.html#flask-example
-
-[prl]:http://www.structlog.org/en/stable/_modules/structlog/_loggers.html?highlight=PrintLogger
 
 You can
 - configure incrementally (e.g. first `processors`, later more )
@@ -320,6 +291,25 @@ You can
 
 
 
+## Immutable Loggers / Mutable Context
+
+Lastly we explain why `context_class` in the config options is a key ingredient to getting the powers of structlog:
+
+When you say
+
+```python
+log = log.bind(req="req_id")
+```
+
+- the old context is shallow copied and the key added. So you'll find it for (only) that (wrapped) logger from now on. 
+
+- You can do this *incrementally* and that is why `OrderedDict` as default context holding class for Python versions [below 3.6][guido] makes sense, to keep multi step context additions in order - and there is a more performant [alternative][ordering] as well. 
+
+[ordering]:http://www.structlog.org/en/stable/performance.html
+
+- You can also [declare][tll], that the context class should be thread/greenlet local. By this you keep immutable i.e. cacheable loggers - but with [thread local context values][tllflask]
+
+[guido]:https://mail.python.org/pipermail/python-dev/2017-December/151283.html
 ----
 
 And that is all there is to know for the base mechanics - you'll have now an easy time understanding the well crafted [documentation][structlogdoc] system of `structlog`, which you should now have a look at.  
@@ -328,9 +318,23 @@ It explains in great detail the integration with stdlib logging for example , sh
 
 ---
 
-[talk]:https://www.youtube.com/watch?time_continue=2150&v=LklGF1rcJII
+[talk]:https://hynek.me/talks/beyond-grep/
 [structlogdoc]:http://www.structlog.org/en/stable/
 
+[bashingchris]:https://twitter.com/chrismcdonough/status/280251086609203200
+[bashing1]:[https://news.ycombinator.com/item?id=4331848]
+
+[hynek]: https://hynek.me/about/
+[cpython]:https://hynek.me/articles/my-road-to-the-python-commit-bit/
+[logrec]:https://github.com/python/cpython/blob/2d7102e726e973ab2d307aa9748c7ec433677877/Lib/logging/__init__.py#L228
+[values]:https://www.youtube.com/watch?v=-6BsiVyC1kM
+[falcon]:http://stevetarver.github.io/2017/05/10/python-falcon-logging.html
+
+[tll]:http://www.structlog.org/en/stable/thread-local.html
+[tllflask]: http://www.structlog.org/en/stable/examples.html#flask-example
+
+
+[prl]:http://www.structlog.org/en/stable/_modules/structlog/_loggers.html?highlight=PrintLogger
 
 
 
